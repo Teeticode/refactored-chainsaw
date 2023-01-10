@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const userRouter = require('./routes/userRoutes');
 const aboutRouter = require('./routes/aboutRoutes');
 const skillsRouter = require('./routes/skillsRouter');
+const transactionRouter = require('./routes/transactionRoutes')
 const path = require('path')
 const {dirname} = require('path');
 const cors = require('cors')
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'Images')))
 app.use(`${url}+users`, userRouter);
 app.use(`${url}+about`, aboutRouter);
 app.use(`${url}+skills`, skillsRouter);
+app.use(`${url}+transactions`, transactionRouter);
 app.use(`${url}+Images`, express.static(path.join(__dirname, 'Images')))
 
 connectToDb();
