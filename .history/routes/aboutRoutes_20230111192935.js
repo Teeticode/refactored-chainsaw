@@ -21,35 +21,31 @@ router.get('/',verifyUser, (req,res)=>{
 router.get('/:id', (req,res)=>{
     About.findOne({info:req.params.id})
     .then((about)=>{
-        
-        if(about){
-            User.findOne({userid: req.params.id})
-            .then((user)=>{
-                if(user){
+        User.findOne({userid: req.params.id})
+        .then((user)=>{
+            if(user){
+                if(about){
                     return res.status(200).json({about})
                 }else{
                     return res.status(404).json({error:'About not found'})
                 }
-            }).catch((err)=>{
-                return res.status(500).json({error:'Something Went Wrong'})
-            })
-            
-        }else{
-            return res.status(500).json({error:'About Doesnt Exist'})
-        }
-        
+            }else{
+                return res.status(500).json({error:'User Doesnt Exist'})
+            }
+        }).catch((err)=>{
+            return res.status(500).json({error:'Something Went Wrong'})
+        })
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })
 })
 
-router.post('/',verifyUser,(req,res)=>{
-    if(!req.user|| !req.body.about 
+router.post('/',upload,verifyUser,(req,res)=>{
+    if(!req.user|| !req.body.about || 
+        !req.file.filename 
         || !req.body.profession ){
-            console.log(req.body)
         return res.status(500).json({error:'Fill in required Fields'})
     }
-    console.log(req.body)
     console.log(req.userid)
     const professions = new Array()
     professions.push(req.body.profession)
@@ -64,7 +60,7 @@ router.post('/',verifyUser,(req,res)=>{
                     const newAbout = new About({
                         info:req.userid,
                         about:req.body.about,
-                        image:req.body.image,
+                        image:`https://refactored-chainsaw-teeti.onrender.com/api/v1/Images/`+req.file.filename,
                         profession:req.body.profession,
                         projects:req.body.projects,
                         experience:req.body.experience,
@@ -92,7 +88,7 @@ router.post('/',verifyUser,(req,res)=>{
     
 })
 
-router.put('/info/:id', verifyUser,(req,res)=>{
+router.put('/info/:id', upload, verifyUser,(req,res)=>{
     if(!req.user|| !req.body.about 
         || !req.body.profession ){
             console.log(req.body)
@@ -123,7 +119,7 @@ router.put('/info/:id', verifyUser,(req,res)=>{
                         profession:req.body.profession,
                         experience:req.body.experience,
                         projects:req.body.projects,
-                        image:req.body.image,
+                        image:image,
                     },
                     {new:true}
                 )

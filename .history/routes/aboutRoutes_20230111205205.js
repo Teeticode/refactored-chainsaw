@@ -21,23 +21,20 @@ router.get('/',verifyUser, (req,res)=>{
 router.get('/:id', (req,res)=>{
     About.findOne({info:req.params.id})
     .then((about)=>{
-        
-        if(about){
-            User.findOne({userid: req.params.id})
-            .then((user)=>{
-                if(user){
+        User.findOne({userid: req.params.id})
+        .then((user)=>{
+            if(user){
+                if(about){
                     return res.status(200).json({about})
                 }else{
                     return res.status(404).json({error:'About not found'})
                 }
-            }).catch((err)=>{
-                return res.status(500).json({error:'Something Went Wrong'})
-            })
-            
-        }else{
-            return res.status(500).json({error:'About Doesnt Exist'})
-        }
-        
+            }else{
+                return res.status(500).json({error:'User Doesnt Exist'})
+            }
+        }).catch((err)=>{
+            return res.status(500).json({error:'Something Went Wrong'})
+        })
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })
