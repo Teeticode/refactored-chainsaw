@@ -60,7 +60,7 @@ router.post('/',upload,verifyUser,(req,res)=>{
                     const newAbout = new About({
                         info:req.userid,
                         about:req.body.about,
-                        image:`https://refactored-chainsaw-teeti.onrender.com/api/v1/Images/`+req.file.filename,
+                        image:`http://localhost:5050/api/v1/Images/`+req.file.filename,
                         profession:req.body.profession,
                         projects:req.body.projects,
                         experience:req.body.experience,
@@ -101,7 +101,7 @@ router.put('/info/:id', upload, verifyUser,(req,res)=>{
     
     let image = '';
     if(req.file){
-       image = `https://refactored-chainsaw-teeti.onrender.com/api/v1/Images/`+req?.file?.filename
+       image = `http://localhost:5050/api/v1/Images/`+req?.file?.filename
     }else{
        image = req.body.image
     }
