@@ -12,7 +12,7 @@ const axios = require('axios')
 dotenv.config();
 
 
-router.get('/',(req,res)=>{
+router.get('/',verifyUser,(req,res)=>{
     User.find({}).select('firstname lastname email verified createdAt')
     .then((users)=>{
         if(users){
