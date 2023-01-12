@@ -46,9 +46,11 @@ router.get('/:id', (req,res)=>{
 router.post('/',verifyUser,(req,res)=>{
     if(!req.user|| !req.body.about 
         || !req.body.profession ){
+            console.log(req.body)
         return res.status(500).json({error:'Fill in required Fields'})
     }
-    
+    console.log(req.body)
+    console.log(req.userid)
     const professions = new Array()
     professions.push(req.body.profession)
     About.findOne({info:req.userid})

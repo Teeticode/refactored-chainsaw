@@ -46,16 +46,16 @@ router.get('/:id', (req,res)=>{
 router.post('/',verifyUser,(req,res)=>{
     if(!req.user|| !req.body.about 
         || !req.body.profession ){
+            console.log(req.body)
         return res.status(500).json({error:'Fill in required Fields'})
     }
-    
+    console.log(req.body)
+    console.log(req.userid)
     const professions = new Array()
     professions.push(req.body.profession)
     About.findOne({info:req.userid})
     .then((aboutuser)=>{
         if(aboutuser){
-            return res.status(500).json({error:'You already have An about'})
-        }else{
             User.findOne({userid:req.userid}).select('email firstname lastname userid -_id isAdmin isVerified')
             .then((user)=>{
                 if(user){
@@ -82,6 +82,9 @@ router.post('/',verifyUser,(req,res)=>{
             }).catch((err)=>{
                 return res.status(500).json({error:'Something Went Wrong'})
             })
+            
+        }else{
+            return res.status(500).json({error:'You already have An about'})
             
         }
     }).catch((err)=>{
