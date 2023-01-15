@@ -17,9 +17,7 @@ router.post('/', verifyUser,(req,res)=>{
     })
     newSkill.save()
     .then((skill)=>{
-        if(skill){
-            return res.status(201).json({message:'Skill created 👍'})
-        }
+        return res.status(200).json({skill})
     }).catch((err)=>{
         return res.status(500).json({error:'Something went wrong'})
     })

@@ -48,12 +48,9 @@ router.post('/register',(req,res)=>{
         return res.status(500).json({error:'Fill in all fields'})
     }
     const userid = lowerCase(req.body.firstname)+ '-' + lowerCase(req.body.lastname) + '-' + (Math.floor(Math.random() * 2000000 + 20))
-    console.log(userid)
     if(req.body.password !== req.body.confirm){
         return res.status(500).json({error:'Passwords Do Not Match'})
-        console.log(userid)
     }
-    
     User.findOne({email:req.body.email.toLowerCase()})
     .then((emailuser)=>{
         if(!emailuser){

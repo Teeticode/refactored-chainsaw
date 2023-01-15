@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Level = require('./Level')
+
 const skillsRouter = new mongoose.Schema({
     title:{
         type:String,
@@ -10,8 +10,8 @@ const skillsRouter = new mongoose.Schema({
             type:String
         },
         level:{
-            type:mongoose.Schema.Types.ObjectId,
             ref:'Level',
+            type:mongoose.Schema.Types.ObjectId,
             require:true
         }
     }]

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('./Users');
 const aboutSchema = new mongoose.Schema({
     info:{
-        type:String,
+        type:Number,
         required:true
     },
     about:{
