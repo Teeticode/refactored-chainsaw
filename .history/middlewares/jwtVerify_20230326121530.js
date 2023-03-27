@@ -13,7 +13,7 @@ function verifyUser (req,res,next){
         const premium = decodedToken.premium
         if(req.body.id&& req.body.premium && req.body.userid && req.body.isAdmin && req.body.userid !== userid && req.body.premium !== premium && req.body.isAdmin!==isAdmin  && req.body.userId !== id){
             res.status(401).json({
-                error: 'Not Authorized'
+                error: 'something went wrong'
             })
         }else{
             req.user = id;
@@ -24,7 +24,7 @@ function verifyUser (req,res,next){
         }
     } catch (error) {
         res.status(401).json({
-            error: 'Not Authorized'
+            error: 'something went wrong'
         })
     }
 }

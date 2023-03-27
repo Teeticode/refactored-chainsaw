@@ -10,7 +10,6 @@ const otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/Premium');
 dotenv.config();
 
 
@@ -108,53 +107,24 @@ router.post('/login',(req,res)=>{
             bcrypt.compare(req.body.password, logUser.password)
             .then((verifiedUser)=>{
                 if(verifiedUser){
-                    Premium.findById(verifiedUser._id)
-                    .then(premUser=>{
-                        if(premUser.isPaid === true){
-                            const token = jwt.sign(
-                                {
-                                    id:logUser._id,
-                                    userid:logUser.userid,
-                                    isAdmin:logUser.isAdmin,
-                                    premium:true
-                                },
-                                process.env.TOKEN_SECRET,
-                                {expiresIn:'1m'}
-                            )
-                            User.findByIdAndUpdate(verifiedUser._id,{
-                                token:token
-                            },{
-                                new:true
-                            }).then((updatedUser)=>{
-                                return res.status(200).json({updatedUser})
-                            }).catch(error=>{
-                                console.log(error)
-                            })
-                        }else{
-                            const token = jwt.sign(
-                                {
-                                    id:logUser._id,
-                                    userid:logUser.userid,
-                                    isAdmin:logUser.isAdmin,
-                                    premium:false
-                                },
-                                process.env.TOKEN_SECRET,
-                                {expiresIn:'1m'}
-                            )
-                            User.findByIdAndUpdate(verifiedUser._id,{
-                                token:token
-                            },{
-                                new:true
-                            }).then((updatedUser)=>{
-                                return res.status(200).json({updatedUser})
-                            }).catch(error=>{
-                                return res.status(500).json({error:error})
-                            })
-                        }
+                    const token = jwt.sign(
+                        {
+                            id:logUser._id,
+                            userid:logUser.userid,
+                            isAdmin:logUser.isAdmin
+                        },
+                        process.env.TOKEN_SECRET,
+                        {expiresIn:'4w'}
+                    )
+                    User.findByIdAndUpdate(verifiedUser._id,{
+                        token:token
+                    },{
+                        new:true
+                    }).then((updatedUser)=>{
+                        return res.status(200).json({updatedUser})
                     }).catch(error=>{
-                        return res.status(500).json({error:error})
+
                     })
-                    
                     
                     
                 }else{

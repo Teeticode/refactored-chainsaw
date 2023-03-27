@@ -24,16 +24,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     },
-    token:{
-        type:String,
-        require:true
-    },
     verified:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
-    premium:{
         type:Boolean,
         require:true,
         default:false

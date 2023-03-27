@@ -33,11 +33,6 @@ const userSchema = new mongoose.Schema({
         require:true,
         default:false
     },
-    premium:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
     isAdmin:{
         type:Boolean,
         require:true,
