@@ -64,6 +64,7 @@ paymentRoutes.post('/stk',async (req,res)=>{
          }
     )
     .then((data)=>{
+        console.log(data.data)
         res.status(200).json(data.data)
     })
     .catch((err)=>{
@@ -73,7 +74,7 @@ paymentRoutes.post('/stk',async (req,res)=>{
 })
 
 paymentRoutes.post('/callback',(req,res)=>{
-    const callback = req
+    const callback = req.body
     console.log(callback)
 })
 

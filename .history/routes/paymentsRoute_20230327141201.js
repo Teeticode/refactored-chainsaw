@@ -49,12 +49,12 @@ paymentRoutes.post('/stk',async (req,res)=>{
             "BusinessShortCode": short_code,    
             "Password": password,    
             "Timestamp": timestamp,    
-            "TransactionType": "CustomerPayBillOnline",    
+            "TransactionType": "CustomerBuyGoodsOnline",    
             "Amount": amount,    
             "PartyA":`254${phone}`,    
             "PartyB": short_code,    
             "PhoneNumber": `254${phone}`,    
-            "CallBackURL": "https://f215-80-240-202-238.in.ngrok.io/api/v1/payments/callback",    
+            "CallBackURL": "https://mydomain.com/pat",    
             "AccountReference": `254${phone}`,    
             "TransactionDesc":"Test"
          },{
@@ -64,6 +64,7 @@ paymentRoutes.post('/stk',async (req,res)=>{
          }
     )
     .then((data)=>{
+        console.log(data.data)
         res.status(200).json(data.data)
     })
     .catch((err)=>{
@@ -72,9 +73,9 @@ paymentRoutes.post('/stk',async (req,res)=>{
     })
 })
 
-paymentRoutes.post('/callback',(req,res)=>{
-    const callback = req
-    console.log(callback)
+paymentRoutes.post('/callback',verifyUser,(req,res)=>{
+    const callback = req.body
+    return res.status(200).json({callback})
 })
 
 module.exports = paymentRoutes

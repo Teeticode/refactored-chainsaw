@@ -28,8 +28,8 @@ router.get('/',(req,res)=>{
     })
 })
 
-router.get('/:id',(req,res)=>{
-    User.findOne({userid:req.params.id}).select('firstname lastname email userid verified createdAt')
+router.get('/profile',verifyUser,(req,res)=>{
+    User.findOne({_id:req.user}).select('firstname lastname email userid verified createdAt')
     .then((users)=>{
         console.log(req.admin)
 
@@ -113,7 +113,6 @@ router.post('/login',(req,res)=>{
                             id:logUser._id,
                             userid:logUser.userid,
                             isAdmin:logUser.isAdmin,
-                            premium:true
                         },
                         process.env.TOKEN_SECRET,
                         {expiresIn:'1m'}
@@ -123,7 +122,7 @@ router.post('/login',(req,res)=>{
                     },{
                         new:true
                     }).then((updatedUser)=>{
-                        return res.status(200).json({user:updatedUser})
+                        return res.status(200).json({updatedUser})
                     }).catch(error=>{
                         console.log(error)
                     })

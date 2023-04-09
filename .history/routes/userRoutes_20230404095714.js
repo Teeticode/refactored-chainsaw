@@ -28,7 +28,7 @@ router.get('/',(req,res)=>{
     })
 })
 
-router.get('/:id',(req,res)=>{
+router.get('/:id',verifyUser,(req,res)=>{
     User.findOne({userid:req.params.id}).select('firstname lastname email userid verified createdAt')
     .then((users)=>{
         console.log(req.admin)

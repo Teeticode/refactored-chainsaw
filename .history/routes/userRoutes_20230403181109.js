@@ -28,8 +28,8 @@ router.get('/',(req,res)=>{
     })
 })
 
-router.get('/:id',(req,res)=>{
-    User.findOne({userid:req.params.id}).select('firstname lastname email userid verified createdAt')
+router.get('/profile',verifyUser,(req,res)=>{
+    User.findOne({_id:req.user}).select('firstname lastname email userid verified createdAt')
     .then((users)=>{
         console.log(req.admin)
 

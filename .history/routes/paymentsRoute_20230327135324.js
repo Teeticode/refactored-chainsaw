@@ -7,7 +7,7 @@ const Premium = require('../models/Premium')
 const axios = require('axios')
 
 
-paymentRoutes.get('/token',async (req,res) =>{
+const generateToken = async (req,res,next) =>{
     const secret = process.env.MPESA_SECRET
     const consumer_key = process.env.MPESA_KEY
     const auth = new Buffer.from(`${consumer_key}:${secret}`).toString("base64")
@@ -18,43 +18,45 @@ paymentRoutes.get('/token',async (req,res) =>{
     })
     .then(data=>{
         console.log(data.data.access_token);
-        const token = data.data.access_token;
-        return res.status(200).json({token:token})
+        token = data.data.access_token;
+        next();
     })
     .catch(error=>{
         console.log(error)
-        return res.json({error:error.message})
+        //return res.json({error:error.message})
     })
+}
+
+paymentRoutes.get('/token',(req,res)=>{
+    generateToken()
 })
-
-
-paymentRoutes.post('/stk',async (req,res)=>{
+paymentRoutes.post('/stk',generateToken,async (req,res)=>{
     const phone = req.body.phone
     const amount = req.body.amount
-    const token = req.body.token
+
     const short_code = process.env.SHORT_CODE
     const pass_key = process.env.PASS_KEY 
     const date = new Date()
-    const timestamp = 
-    date.getFullYear() +
+    const timestamp = date.getFullYear() +
     ("0" + (date.getMonth() + 1)).slice(-2) +
     ("0" + date.getDate()).slice(-2) +
     ("0" + date.getHours()).slice(-2) +
     ("0" + date.getMinutes()).slice(-2) +
     ("0" + date.getSeconds()).slice(-2);
     const password = new Buffer.from(short_code + pass_key + timestamp).toString("base64")
+    console.log(password)
     await axios.post(
         "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
         {    
             "BusinessShortCode": short_code,    
             "Password": password,    
             "Timestamp": timestamp,    
-            "TransactionType": "CustomerPayBillOnline",    
+            "TransactionType": "CustomerBuyGoodsOnline",    
             "Amount": amount,    
             "PartyA":`254${phone}`,    
             "PartyB": short_code,    
             "PhoneNumber": `254${phone}`,    
-            "CallBackURL": "https://f215-80-240-202-238.in.ngrok.io/api/v1/payments/callback",    
+            "CallBackURL": "https://mydomain.com/pat",    
             "AccountReference": `254${phone}`,    
             "TransactionDesc":"Test"
          },{
@@ -64,6 +66,7 @@ paymentRoutes.post('/stk',async (req,res)=>{
          }
     )
     .then((data)=>{
+        console.log(data.data)
         res.status(200).json(data.data)
     })
     .catch((err)=>{
@@ -72,9 +75,9 @@ paymentRoutes.post('/stk',async (req,res)=>{
     })
 })
 
-paymentRoutes.post('/callback',(req,res)=>{
-    const callback = req
-    console.log(callback)
+paymentRoutes.post('/callback',verifyUser,(req,res)=>{
+    const callback = req.body
+    return res.status(200).json({callback})
 })
 
 module.exports = paymentRoutes

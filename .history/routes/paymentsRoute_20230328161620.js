@@ -64,6 +64,7 @@ paymentRoutes.post('/stk',async (req,res)=>{
          }
     )
     .then((data)=>{
+        console.log(data.data)
         res.status(200).json(data.data)
     })
     .catch((err)=>{

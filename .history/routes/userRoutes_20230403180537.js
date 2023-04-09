@@ -28,8 +28,8 @@ router.get('/',(req,res)=>{
     })
 })
 
-router.get('/:id',(req,res)=>{
-    User.findOne({userid:req.params.id}).select('firstname lastname email userid verified createdAt')
+router.get('/profile',verifyUser,(req,res)=>{
+    User.findOne({_id:req.user}).select('firstname lastname email userid verified createdAt')
     .then((users)=>{
         console.log(req.admin)
 
@@ -108,24 +108,51 @@ router.post('/login',(req,res)=>{
             bcrypt.compare(req.body.password, logUser.password)
             .then((verifiedUser)=>{
                 if(verifiedUser){
-                    const token = jwt.sign(
-                        {
-                            id:logUser._id,
-                            userid:logUser.userid,
-                            isAdmin:logUser.isAdmin,
-                            premium:true
-                        },
-                        process.env.TOKEN_SECRET,
-                        {expiresIn:'1m'}
-                    )
-                    User.findByIdAndUpdate(logUser._id,{
-                        token:token
-                    },{
-                        new:true
-                    }).then((updatedUser)=>{
-                        return res.status(200).json({user:updatedUser})
+                    Premium.findById(logUser._id)
+                    .then(premUser=>{
+                        if(premUser.isPaid === true){
+                            const token = jwt.sign(
+                                {
+                                    id:logUser._id,
+                                    userid:logUser.userid,
+                                    isAdmin:logUser.isAdmin,
+                                    premium:true
+                                },
+                                process.env.TOKEN_SECRET,
+                                {expiresIn:'1m'}
+                            )
+                            User.findByIdAndUpdate(logUser._id,{
+                                token:token
+                            },{
+                                new:true
+                            }).then((updatedUser)=>{
+                                return res.status(200).json({updatedUser})
+                            }).catch(error=>{
+                                console.log(error)
+                            })
+                        }else{
+                            const token = jwt.sign(
+                                {
+                                    id:logUser._id,
+                                    userid:logUser.userid,
+                                    isAdmin:logUser.isAdmin,
+                                    premium:false
+                                },
+                                process.env.TOKEN_SECRET,
+                                {expiresIn:'1m'}
+                            )
+                            User.findByIdAndUpdate(logUser._id,{
+                                token:token
+                            },{
+                                new:true
+                            }).then((updatedUser)=>{
+                                return res.status(200).json({updatedUser})
+                            }).catch(error=>{
+                                return res.status(500).json({error:error})
+                            })
+                        }
                     }).catch(error=>{
-                        console.log(error)
+                        return res.status(500).json({error:error})
                     })
                     
                     
