@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.get('/',verifyUser, (req,res)=>{
     if(req.admin){
-        About.find({}).populate('info','email')
+        About.find({}).populate('info','email','user')
         .then((abouts)=>{
-            return res.status(200).json({abouts})
+            return res.status(200).json({abouts:abouts})
         }).catch(err=>{
             return res.status(500).json({error:'something went wrong'})
         })
@@ -46,11 +46,9 @@ router.get('/:id', (req,res)=>{
 router.post('/',verifyUser,(req,res)=>{
     if(!req.user|| !req.body.about 
         || !req.body.profession ){
-            console.log(req.body)
         return res.status(500).json({error:'Fill in required Fields'})
     }
-    console.log(req.body)
-    console.log(req.userid)
+    
     const professions = new Array()
     professions.push(req.body.profession)
     About.findOne({info:req.userid})

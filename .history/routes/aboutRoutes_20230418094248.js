@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/',verifyUser, (req,res)=>{
     if(req.admin){
-        About.find({}).populate('info','email')
+        About.find({}).populate('info','email','user')
         .then((abouts)=>{
             return res.status(200).json({abouts})
         }).catch(err=>{
@@ -21,20 +21,23 @@ router.get('/',verifyUser, (req,res)=>{
 router.get('/:id', (req,res)=>{
     About.findOne({info:req.params.id})
     .then((about)=>{
-        User.findOne({userid: req.params.id})
-        .then((user)=>{
-            if(user){
-                if(about){
+        
+        if(about){
+            User.findOne({userid: req.params.id})
+            .then((user)=>{
+                if(user){
                     return res.status(200).json({about})
                 }else{
                     return res.status(404).json({error:'About not found'})
                 }
-            }else{
-                return res.status(500).json({error:'User Doesnt Exist'})
-            }
-        }).catch((err)=>{
-            return res.status(500).json({error:'Something Went Wrong'})
-        })
+            }).catch((err)=>{
+                return res.status(500).json({error:'Something Went Wrong'})
+            })
+            
+        }else{
+            return res.status(500).json({error:'About Doesnt Exist'})
+        }
+        
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })
@@ -45,7 +48,7 @@ router.post('/',verifyUser,(req,res)=>{
         || !req.body.profession ){
         return res.status(500).json({error:'Fill in required Fields'})
     }
-    console.log(req.userid)
+    
     const professions = new Array()
     professions.push(req.body.profession)
     About.findOne({info:req.userid})
@@ -118,7 +121,7 @@ router.put('/info/:id', verifyUser,(req,res)=>{
                         profession:req.body.profession,
                         experience:req.body.experience,
                         projects:req.body.projects,
-                        image:image,
+                        image:req.body.image,
                     },
                     {new:true}
                 )

@@ -6,17 +6,15 @@ const upload = require('../middlewares/multerHelper');
 const uploadFile = require('../middlewares/multerFile');
 const router = express.Router();
 
-router.get('/',verifyUser, (req,res)=>{
-    if(req.admin){
-        About.find({}).populate('info','email')
+router.get('/', (req,res)=>{
+   
+        About.find({})
         .then((abouts)=>{
-            return res.status(200).json({abouts})
+            return res.status(200).json({abouts:abouts})
         }).catch(err=>{
             return res.status(500).json({error:'something went wrong'})
         })
-    }else{
-        return res.status(401).json({error:'Not Authorized'})
-    }
+    
 })
 router.get('/:id', (req,res)=>{
     About.findOne({info:req.params.id})
