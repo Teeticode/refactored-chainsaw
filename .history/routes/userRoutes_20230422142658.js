@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose')
 const router = express.Router();
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
@@ -18,7 +17,7 @@ dotenv.config();
 
 router.get('/',(req,res)=>{
     
-    User.find({}).select('userid firstname lastname email verified isBlocked createdAt')
+    User.find({}).select('userid firstname lastname email verified createdAt')
     .then((users)=>{
         if(users){
             return res.status(200).json({users:users})
@@ -46,74 +45,22 @@ router.get('/:id',(req,res)=>{
         return res.status(500).json({error:'something went wrong'})
     })
 })
-router.put('/block/:id',(req,res)=>{
+router.get('/block/:id',(req,res)=>{
     const paramid = req.params.id
     if(mongoose.isValidObjectId(paramid)){
-        User.findByIdAndUpdate(
-            paramid,
-            {
-                isBlocked:true
-            },
-            {new:true}
-        )
+        User.findByIdAndUpdate({_id:req.params.id})
         .then((users)=>{
-            return res.status(200).json({users:users})
+            console.log(req.admin)
+
+            if(users){
+                return res.status(200).json({user:users})
+            }else{
+                return res.status(404).json({error:'Not found'})
+            }
         })
         .catch(err=>{
             return res.status(500).json({error:'something went wrong'})
         })
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
-})
-router.put('/unblock/:id',(req,res)=>{
-    const paramid = req.params.id
-    if(mongoose.isValidObjectId(paramid)){
-        User.findByIdAndUpdate(
-            paramid,
-            {
-                isBlocked:false
-            },
-            {new:true}
-        )
-        .then((users)=>{
-            return res.status(200).json({users:users})
-        })
-        .catch(err=>{
-            return res.status(500).json({error:'something went wrong'})
-        })
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
-})
-router.delete('/delete/:id',verifyUser,(req,res)=>{
-    const paramid = req.params.id
-    
-    if(mongoose.isValidObjectId(paramid)){
-        if(req.user === paramid){
-            User.findByIdAndDelete(paramid)
-            .then((deletedUser)=>{
-                if(deletedUser){
-                    return res.status(200).json({
-                        success:true,
-                        message:"product deleted successfully"
-                    })
-                }else{
-                    return res.status(404).json({
-                        success:false,
-                        message:'product not found'
-                    })
-                }
-            })
-            .catch(err=>{
-                return res.status(500).json({error:'something went wrong'})
-            })
-        }else{
-            return res.status(401).json({error:'Something Went Wrong, try again later!'})
-        }
-        
     }else{
         return res.status(500).json({error:'Something Went wrong'})
     }

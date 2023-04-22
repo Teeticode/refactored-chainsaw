@@ -93,19 +93,9 @@ router.delete('/delete/:id',verifyUser,(req,res)=>{
     
     if(mongoose.isValidObjectId(paramid)){
         if(req.user === paramid){
-            User.findByIdAndDelete(paramid)
-            .then((deletedUser)=>{
-                if(deletedUser){
-                    return res.status(200).json({
-                        success:true,
-                        message:"product deleted successfully"
-                    })
-                }else{
-                    return res.status(404).json({
-                        success:false,
-                        message:'product not found'
-                    })
-                }
+            User.findByIdAndDelete({_id:paramid})
+            .then((userDeleted)=>{
+                return res.status(302).json({error:'user deleted'})
             })
             .catch(err=>{
                 return res.status(500).json({error:'something went wrong'})

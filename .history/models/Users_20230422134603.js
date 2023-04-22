@@ -47,11 +47,6 @@ const userSchema = new mongoose.Schema({
         require:true,
         default:'user'
     },
-    isBlocked:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
     cart:{
         type: Array,
         default: []

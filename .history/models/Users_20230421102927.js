@@ -42,15 +42,10 @@ const userSchema = new mongoose.Schema({
         require:true,
         default:false
     },
-    role:{
+    isAdmin:{
         type:String,
         require:true,
         default:'user'
-    },
-    isBlocked:{
-        type:Boolean,
-        require:true,
-        default:false
     },
     cart:{
         type: Array,

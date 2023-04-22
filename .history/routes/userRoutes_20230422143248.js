@@ -88,37 +88,6 @@ router.put('/unblock/:id',(req,res)=>{
     }
     
 })
-router.delete('/delete/:id',verifyUser,(req,res)=>{
-    const paramid = req.params.id
-    
-    if(mongoose.isValidObjectId(paramid)){
-        if(req.user === paramid){
-            User.findByIdAndDelete(paramid)
-            .then((deletedUser)=>{
-                if(deletedUser){
-                    return res.status(200).json({
-                        success:true,
-                        message:"product deleted successfully"
-                    })
-                }else{
-                    return res.status(404).json({
-                        success:false,
-                        message:'product not found'
-                    })
-                }
-            })
-            .catch(err=>{
-                return res.status(500).json({error:'something went wrong'})
-            })
-        }else{
-            return res.status(401).json({error:'Something Went Wrong, try again later!'})
-        }
-        
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
-})
 
 router.post('/register',(req,res)=>{
     if(!req.body.firstname|| !req.body.lastname || !req.body.password || !req.body.username || !req.body.confirm || !req.body.email){

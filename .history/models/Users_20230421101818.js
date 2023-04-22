@@ -42,28 +42,11 @@ const userSchema = new mongoose.Schema({
         require:true,
         default:false
     },
-    role:{
+    isAdmin:{
         type:String,
         require:true,
         default:'user'
     },
-    isBlocked:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
-    cart:{
-        type: Array,
-        default: []
-    },
-    address:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Address'
-    }],
-    wishlist:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Products'
-    }]
 
 },{
     timestamps:true

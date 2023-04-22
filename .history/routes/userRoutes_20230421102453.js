@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose')
 const router = express.Router();
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
@@ -11,14 +10,12 @@ const otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/PremiumSubscriber');
-const asyncHandler = require('express-async-handler')
+const Premium = require('../models/Premium');
 dotenv.config();
 
 
 router.get('/',(req,res)=>{
-    
-    User.find({}).select('userid firstname lastname email verified isBlocked createdAt')
+    User.find({}).select('firstname lastname email verified createdAt')
     .then((users)=>{
         if(users){
             return res.status(200).json({users:users})
@@ -32,7 +29,7 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/:id',(req,res)=>{
-    User.findOne({userid:req.params.id}).select('firstname lastname email userid verified isBlocked createdAt')
+    User.findOne({userid:req.params.id}).select('firstname lastname email userid verified createdAt')
     .then((users)=>{
         console.log(req.admin)
 
@@ -45,79 +42,6 @@ router.get('/:id',(req,res)=>{
     .catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })
-})
-router.put('/block/:id',(req,res)=>{
-    const paramid = req.params.id
-    if(mongoose.isValidObjectId(paramid)){
-        User.findByIdAndUpdate(
-            paramid,
-            {
-                isBlocked:true
-            },
-            {new:true}
-        )
-        .then((users)=>{
-            return res.status(200).json({users:users})
-        })
-        .catch(err=>{
-            return res.status(500).json({error:'something went wrong'})
-        })
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
-})
-router.put('/unblock/:id',(req,res)=>{
-    const paramid = req.params.id
-    if(mongoose.isValidObjectId(paramid)){
-        User.findByIdAndUpdate(
-            paramid,
-            {
-                isBlocked:false
-            },
-            {new:true}
-        )
-        .then((users)=>{
-            return res.status(200).json({users:users})
-        })
-        .catch(err=>{
-            return res.status(500).json({error:'something went wrong'})
-        })
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
-})
-router.delete('/delete/:id',verifyUser,(req,res)=>{
-    const paramid = req.params.id
-    
-    if(mongoose.isValidObjectId(paramid)){
-        if(req.user === paramid){
-            User.findByIdAndDelete(paramid)
-            .then((deletedUser)=>{
-                if(deletedUser){
-                    return res.status(200).json({
-                        success:true,
-                        message:"product deleted successfully"
-                    })
-                }else{
-                    return res.status(404).json({
-                        success:false,
-                        message:'product not found'
-                    })
-                }
-            })
-            .catch(err=>{
-                return res.status(500).json({error:'something went wrong'})
-            })
-        }else{
-            return res.status(401).json({error:'Something Went Wrong, try again later!'})
-        }
-        
-    }else{
-        return res.status(500).json({error:'Something Went wrong'})
-    }
-    
 })
 
 router.post('/register',(req,res)=>{
@@ -199,13 +123,13 @@ router.post('/login',(req,res)=>{
                         {
                             id:logUser._id,
                             userid:logUser.userid,
-                            role:logUser.role,
+                            isAdmin:logUser.isAdmin,
                             premium:true
                         },
                         process.env.TOKEN_SECRET,
-                        {expiresIn:'1440h'}
+                        {expiresIn:'1m'}
                     )
-                    if(logUser.email === admin){
+                    if(logUser === admin){
                         User.findByIdAndUpdate(logUser._id,{
                             token:token,
                             role:'admin'
