@@ -22,7 +22,7 @@ router.get('/', (req,res)=>{
                 response.push(abouts[i])
             }
         }
-        return res.status(200).json({abouts:abouts})
+        return res.status(200).json({abouts:response})
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })

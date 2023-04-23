@@ -7,21 +7,11 @@ const uploadFile = require('../middlewares/multerFile');
 const router = express.Router();
 
 router.get('/', (req,res)=>{
-    const {firstname} = req.query;
-    const queryObject = {};
-    if(firstname){
-        queryObject.firstname = firstname
-    }
+    const filters = req.query
    
     About.find({})
     .then((abouts)=>{
-        let response = []
-        for(let i=0;i>abouts.length;i++){
-            console.log(abouts[i].user.firstname)
-            if(abouts[i].user.firstname.includes(firstname)){
-                response.push(abouts[i])
-            }
-        }
+        
         return res.status(200).json({abouts:abouts})
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})

@@ -15,14 +15,12 @@ router.get('/', (req,res)=>{
    
     About.find({})
     .then((abouts)=>{
-        let response = []
-        for(let i=0;i>abouts.length;i++){
-            console.log(abouts[i].user.firstname)
-            if(abouts[i].user.firstname.includes(firstname)){
-                response.push(abouts[i])
+        const aboutFilter = abouts.filter((about)=>{
+            if(about.user.firstname.includes(firstname)){
+                return about
             }
-        }
-        return res.status(200).json({abouts:abouts})
+        })
+        return res.status(200).json({abouts:aboutFilter})
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })

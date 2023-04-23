@@ -17,12 +17,11 @@ router.get('/', (req,res)=>{
     .then((abouts)=>{
         let response = []
         for(let i=0;i>abouts.length;i++){
-            console.log(abouts[i].user.firstname)
             if(abouts[i].user.firstname.includes(firstname)){
                 response.push(abouts[i])
             }
         }
-        return res.status(200).json({abouts:abouts})
+        return res.status(200).json({abouts:response})
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })

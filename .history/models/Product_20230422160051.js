@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = "mongoose";
 
 const productSchema = new mongoose.Schema({
     name:{

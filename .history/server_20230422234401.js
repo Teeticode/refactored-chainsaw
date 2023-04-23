@@ -9,9 +9,7 @@ const skillsRouter = require('./routes/skillsRouter');
 const levelsRouter = require('./routes/levelsRouter');
 const paymentRouter = require('./routes/paymentsRoute');
 const productsRouter = require('./routes/productsRoutes');
-const categoryRouter = require('./routes/categoryRoutes');
-const storeRouter = require('./routes/storeRoutes')
-
+const categoryRouter = require('./routes/categoryRoutes')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 const {dirname} = require('path');
@@ -35,7 +33,6 @@ app.use(`${url}+levels`, levelsRouter);
 app.use(`${url}+payments`, paymentRouter);
 app.use(`${url}+products`, productsRouter);
 app.use(`${url}+category`, categoryRouter);
-app.use(`${url}+stores`, storeRouter);
 app.use(`${url}+Images`, express.static(path.join(__dirname, 'Images')))
 
 connectToDb();

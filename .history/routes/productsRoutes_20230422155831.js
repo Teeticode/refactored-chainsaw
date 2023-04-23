@@ -282,4 +282,4 @@ productRoute.get('/all/featured/:count',(req,res)=>{
         })
     })
 })
-module.exports = productRoute;
+export default productRoute;
