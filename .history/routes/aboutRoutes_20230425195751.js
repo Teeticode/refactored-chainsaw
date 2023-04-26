@@ -21,7 +21,7 @@ router.get('/', (req,res)=>{
 })
 router.get('/search/:key', (req,res)=>{
     
-   console.log(upperCase(req.params.key))
+   
     User.find({
         
       

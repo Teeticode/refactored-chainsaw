@@ -19,27 +19,6 @@ router.get('/', (req,res)=>{
     })
     
 })
-router.get('/search/:key', (req,res)=>{
-    
-   console.log(upperCase(req.params.key))
-    User.find({
-        
-      
-            "$or":[
-                {"firstname":{$regex:req.params.key}}
-            ]
-        
-    })
-    .then((users)=>{
-        let response = []
-        
-        return res.status(200).json({abouts:users})
-    }).catch(err=>{
-        return res.status(500).json({error:'something went wrong'})
-    })
-    
-})
-
 router.get('/:id', (req,res)=>{
     About.findOne({info:req.params.id})
     .then((about)=>{

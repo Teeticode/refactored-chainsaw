@@ -21,19 +21,19 @@ router.get('/', (req,res)=>{
 })
 router.get('/search/:key', (req,res)=>{
     
-   console.log(upperCase(req.params.key))
-    User.find({
-        
-      
+   
+    About.find({
+        user:
+        {
             "$or":[
                 {"firstname":{$regex:req.params.key}}
             ]
-        
-    })
-    .then((users)=>{
+        }
+    }).limit(5)
+    .then((abouts)=>{
         let response = []
         
-        return res.status(200).json({abouts:users})
+        return res.status(200).json({abouts:abouts})
     }).catch(err=>{
         return res.status(500).json({error:'something went wrong'})
     })

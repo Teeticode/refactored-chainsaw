@@ -27,13 +27,9 @@ businessRouter.get('/',(req,res)=>{
 businessRouter.get('/:id',(req,res)=>{
     Business.findById(req.params.id).populate("products")
     .then(business=>{
+        console.log(business)
         if(business){
-            if(business){
-                return res.status(200).json({business:business})
-            }else{
-                return res.status(404).json({error:'Not Found'})
-            }
-            
+            return res.status(200).json({business:business})
         }else{
             return res.status(404).json({error:"not found"})
         }
