@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const categorySchema = mongoose.Schema({
     name:{
         type:String,
-        require:true
+        required:true
     },
     color:{
         type:String,
@@ -13,9 +13,7 @@ const categorySchema = mongoose.Schema({
         type:String
     },
     image:{
-        type:String,
-        require:true
-
+        type:String
     },
     owner:{
         type:mongoose.Schema.Types.ObjectId,

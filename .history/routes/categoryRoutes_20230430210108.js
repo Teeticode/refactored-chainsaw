@@ -4,7 +4,6 @@ const verifyUser = require('../middlewares/jwtVerify.js');
 const upload = require("../middlewares/multerHelper.js");
 const dotenv = require('dotenv')
 dotenv.config()
-const api = process.env.api_image
 const categoryRouter = express.Router();
 
 categoryRouter.get('/', (req,res)=>{
@@ -41,13 +40,12 @@ categoryRouter.post('/',verifyUser,upload, (req,res)=>{
             name:req.body.name,
             color:req.body.color,
             icon:req.body.icon,
-            image:api+req.file.filename,
-            owner:req.user
+            image:req.body.image
         });
 
         category.save()
         .then((newCat)=>{
-            res.status(201).json({category:newCat})
+            res.status(201).json(newCat)
         })
         .catch((err)=>{
             res.status(500).json({
@@ -56,7 +54,7 @@ categoryRouter.post('/',verifyUser,upload, (req,res)=>{
             })
         })
     }else{
-        return res.status(401).json({error:'Invalid Image Type'})
+        return res.status(401).json({error:'Invalid Image type'})
     }
 })
 
@@ -84,39 +82,34 @@ categoryRouter.delete("/:id", verifyUser, (req,res)=>{
     })
 })
 categoryRouter.put('/:id', verifyUser, (req,res)=>{
-    if(!req.body.name || !req.file.filename){
-        return res.status(500).json({error:'Fill in all fields.'})
-    }
-    if(req.file.mimetype ==='image/jpg' || req.file.mimetype ==='image/jpeg' || req.file.mimetype ==='image/png'){
-        Category.findByIdAndUpdate(
-            req.params.id,
-            {
-                name:req.body.name,
-                image:api+req.file.filename
-            },
-            {
-                new:true
-            }  
-        )
-        .then((updatedCat)=>{
-            if(updatedCat){
-                return res.status(200).json(updatedCat)
-            }else{
-                return res.status(404).json({
-                    success:false,
-                    message:"Category not found"
-                })
-            }
-        })
-        .catch((err)=>{
-            return res.status(500).json({
-                error:'try again',
-                success:false
+    Category.findByIdAndUpdate(
+        req.params.id,
+        {
+            name:req.body.name,
+            icon:req.body.icon,
+            color:req.body.color,
+            image:req.body.image
+        },
+        {
+            new:true
+        }  
+    )
+    .then((updatedCat)=>{
+        if(updatedCat){
+            return res.status(200).json(updatedCat)
+        }else{
+            return res.status(404).json({
+                success:false,
+                message:"Category not found"
             })
+        }
+    })
+    .catch((err)=>{
+        return res.status(500).json({
+            error:'try again',
+            success:false
         })
-    }else{
-        return res.status(401).json({error:'Invalid Image Type'})
-    }
+    })
 })
 
 

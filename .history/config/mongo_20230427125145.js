@@ -10,12 +10,8 @@ const connectToDb = async ()=>{
             useNewUrlParser:true,
             dbName:'portfolio'
         })
-        if(connection){
-            console.log('connected to portfolio online')
-        }else{
-            console.log('no connection established')
-        }
         
+        console.log('connected to portfolio local')
     }catch(error){
         console.error(`Error is ${error.message}`);
         process.exit(1)

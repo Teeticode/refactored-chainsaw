@@ -56,7 +56,7 @@ categoryRouter.post('/',verifyUser,upload, (req,res)=>{
             })
         })
     }else{
-        return res.status(401).json({error:'Invalid Image Type'})
+        return res.status(401).json({error:'Invalid Image type'})
     }
 })
 
@@ -84,15 +84,12 @@ categoryRouter.delete("/:id", verifyUser, (req,res)=>{
     })
 })
 categoryRouter.put('/:id', verifyUser, (req,res)=>{
-    if(!req.body.name || !req.file.filename){
-        return res.status(500).json({error:'Fill in all fields.'})
-    }
     if(req.file.mimetype ==='image/jpg' || req.file.mimetype ==='image/jpeg' || req.file.mimetype ==='image/png'){
         Category.findByIdAndUpdate(
             req.params.id,
             {
                 name:req.body.name,
-                image:api+req.file.filename
+                image:req.body.image
             },
             {
                 new:true

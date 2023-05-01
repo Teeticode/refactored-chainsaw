@@ -39,7 +39,7 @@ app.use(`${url}+payments`, paymentRouter);
 app.use(`${url}+products`, productsRouter);
 app.use(`${url}+category`, categoryRouter);
 app.use(`${url}+stores`, storeRouter);
-app.use(`${url}+Images`, express.static(path.join(__dirname, 'Images')))
+app.use(`${url}+images`, express.static(path.join(__dirname, 'Images')))
 
 connectToDb();
 app.get(`${url}`,(req,res)=>{
