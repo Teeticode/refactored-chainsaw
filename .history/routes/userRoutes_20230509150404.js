@@ -1,18 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const router = express.Router();
-const User = require('../models/Users');
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const verifyUser = require('../middlewares/jwtVerify')
-const Phone = require('../models/Phone')
 const otpGenerator = require('otp-generator')
-const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/PremiumSubscriber');
-const asyncHandler = require('express-async-handler')
+
 dotenv.config();
 
 

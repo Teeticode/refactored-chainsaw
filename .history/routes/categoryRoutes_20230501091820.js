@@ -10,7 +10,7 @@ const categoryRouter = express.Router();
 categoryRouter.get('/', (req,res)=>{
     Category.find({})
     .then((cat)=>{
-        res.status(200).json({categories:cat})
+        res.status(200).json({category:cat})
     })
     .catch((err)=>{
         res.status(500).json({
@@ -20,9 +20,9 @@ categoryRouter.get('/', (req,res)=>{
     })
 })
 categoryRouter.get('/:id', (req,res)=>{
-    Category.find({owner: req.params.id})
+    Category.findById(req.params.id)
     .then((cat)=>{
-        res.status(200).json({categories:cat})
+        res.status(200).json(cat)
     })
     .catch((err)=>{
         res.status(500).json({
@@ -83,48 +83,37 @@ categoryRouter.delete("/:id", verifyUser, (req,res)=>{
         })
     })
 })
-categoryRouter.put('/:id', verifyUser,upload, (req,res)=>{
+categoryRouter.put('/:id', verifyUser, (req,res)=>{
     if(!req.body.name || !req.file.filename){
         return res.status(500).json({error:'Fill in all fields.'})
     }
     if(req.file.mimetype ==='image/jpg' || req.file.mimetype ==='image/jpeg' || req.file.mimetype ==='image/png'){
-        Category.findById(req.params.id)
-        .then((cat)=>{
-            if(cat.owner === req.user){
-                Category.findByIdAndUpdate(
-                    req.params.id,
-                    {
-                        name:req.body.name,
-                        image:api+req.file.filename,
-                        owner:req.user
-                    },
-                    {
-                        new:true
-                    }  
-                )
-                .then((updatedCat)=>{
-                    if(updatedCat){
-                        return res.status(200).json(updatedCat)
-                    }else{
-                        return res.status(404).json({
-                            success:false,
-                            message:"Category not found"
-                        })
-                    }
-                })
-                .catch((err)=>{
-                    return res.status(500).json({
-                        error:'try again',
-                        success:false
-                    })
-                })
+        Category.findByIdAndUpdate(
+            req.params.id,
+            {
+                name:req.body.name,
+                image:api+req.file.filename
+            },
+            {
+                new:true
+            }  
+        )
+        .then((updatedCat)=>{
+            if(updatedCat){
+                return res.status(200).json(updatedCat)
             }else{
-                return res.status(404).json({error:'This Is Not Your Category'})
+                return res.status(404).json({
+                    success:false,
+                    message:"Category not found"
+                })
             }
-        }).catch((err)=>{
-            return res.status(500).json({error:'Something Went Wrong'})
         })
-        
+        .catch((err)=>{
+            return res.status(500).json({
+                error:'try again',
+                success:false
+            })
+        })
     }else{
         return res.status(401).json({error:'Invalid Image Type'})
     }

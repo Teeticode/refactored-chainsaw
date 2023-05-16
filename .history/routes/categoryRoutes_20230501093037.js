@@ -20,9 +20,9 @@ categoryRouter.get('/', (req,res)=>{
     })
 })
 categoryRouter.get('/:id', (req,res)=>{
-    Category.find({owner: req.params.id})
+    Category.findById(req.params.id)
     .then((cat)=>{
-        res.status(200).json({categories:cat})
+        res.status(200).json(cat)
     })
     .catch((err)=>{
         res.status(500).json({

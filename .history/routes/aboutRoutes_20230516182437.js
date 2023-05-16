@@ -41,11 +41,11 @@ router.get('/search/:key', (req,res)=>{
 })
 
 router.get('/:id', (req,res)=>{
-    console.log(req.params.id)
-            About.findOne({_id: req.params.id})
-            .then((about)=>{
-                if(about){
-                    return res.status(200).json({about:about})
+   
+            User.findOne({userid: req.params.id})
+            .then((user)=>{
+                if(user){
+                    return res.status(200).json({about})
                 }else{
                     return res.status(404).json({error:'About not found'})
                 }
