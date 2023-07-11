@@ -3,7 +3,7 @@ const verifyUser = require('../middlewares/jwtVerify')
 const dotenv = require('dotenv')
 dotenv.config()
 const paymentRoutes = express.Router()
-const Premium = require('../models/PremiumSubscriber')
+const Premium = require('../models/Premium')
 const axios = require('axios')
 
 

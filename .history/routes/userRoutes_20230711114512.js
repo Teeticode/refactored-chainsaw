@@ -222,7 +222,7 @@ router.post('/login',(req,res)=>{
                             role:'admin'
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
+                        }).select('_id email role wishlist cart')
                         .then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
@@ -234,7 +234,7 @@ router.post('/login',(req,res)=>{
                             token:token
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
+                        }).select('_id email role wishlist cart')
                         .then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{

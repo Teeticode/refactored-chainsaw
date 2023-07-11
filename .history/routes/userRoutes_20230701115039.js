@@ -11,7 +11,7 @@ const otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/Premium');
+const Premium = require('../models/PremiumSubscriber');
 const asyncHandler = require('express-async-handler')
 dotenv.config();
 
@@ -134,21 +134,24 @@ router.delete('/delete/:id',verifyUser,(req,res)=>{
 })
 
 router.post('/register',(req,res)=>{
-    if(!req.body.firstname|| !req.body.lastname || !req.body.password || !req.body.email){
+    if(!req.body.firstname|| !req.body.lastname || !req.body.password || !req.body.confirm || !req.body.email){
         return res.status(500).json({error:'Fill in all fields'})
     }
     const userid = lowerCase(req.body.firstname)+ '-' + lowerCase(req.body.lastname) + '-' + (Math.floor(Math.random() * 2000000 + 20))
-    const username = lowerCase(req.body.lastname) + '_' + (Math.floor(Math.random() * 200000 + 20))
+    const username = lowerCase(req.body.firstname)+ '_' + lowerCase(req.body.lastname) + '_' + (Math.floor(Math.random() * 200000 + 20))
     
-   
+    if(req.body.password !== req.body.confirm){
+        return res.status(500).json({error:'Passwords Do Not Match'})
+        console.log(userid)
+    }
    
     
     User.findOne({email:req.body.email.toLowerCase()})
     .then((emailuser)=>{
         if(!emailuser){
             User.findOne({username:username})
-            .then((usname)=>{
-                if(!usname){
+            .then((username)=>{
+                if(!username){
                     User.findOne({userid:userid})
                     .then((userExists)=>{
                         if(!userExists){
@@ -180,7 +183,7 @@ router.post('/register',(req,res)=>{
                 return res.status(500).json({error:'Something Went Wrong'})
             })
                 }else{
-                    return res.status(200).json({error:'Try Again please'})
+                    return res.status(200).json({error:'Username is taken'})
                 }
             })
             
@@ -222,8 +225,7 @@ router.post('/login',(req,res)=>{
                             role:'admin'
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)
@@ -234,8 +236,7 @@ router.post('/login',(req,res)=>{
                             token:token
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)

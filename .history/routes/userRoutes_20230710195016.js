@@ -11,7 +11,7 @@ const otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/Premium');
+const Premium = require('../models/PremiumSubscriber');
 const asyncHandler = require('express-async-handler')
 dotenv.config();
 
@@ -147,8 +147,8 @@ router.post('/register',(req,res)=>{
     .then((emailuser)=>{
         if(!emailuser){
             User.findOne({username:username})
-            .then((usname)=>{
-                if(!usname){
+            .then((username)=>{
+                if(!username){
                     User.findOne({userid:userid})
                     .then((userExists)=>{
                         if(!userExists){
@@ -168,7 +168,7 @@ router.post('/register',(req,res)=>{
                                         return res.status(201).json({message:'Account Created Successfully, Refresh To Create A new Account'})
                                     }
                                 }).catch((err)=>{
-                                    return res.status(500).json({error:'user not created. Try Again Later!'})
+                                    return res.status(500).json({error:err})
                                 })
                             }).catch(err=>{
                                 return res.status(500).json({error:'something went wrong'})
@@ -222,8 +222,7 @@ router.post('/login',(req,res)=>{
                             role:'admin'
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)
@@ -234,8 +233,7 @@ router.post('/login',(req,res)=>{
                             token:token
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)

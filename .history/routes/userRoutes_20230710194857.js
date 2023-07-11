@@ -11,7 +11,7 @@ const otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const axios = require('axios');
 const { lowerCase } = require('lodash');
-const Premium = require('../models/Premium');
+const Premium = require('../models/PremiumSubscriber');
 const asyncHandler = require('express-async-handler')
 dotenv.config();
 
@@ -147,8 +147,8 @@ router.post('/register',(req,res)=>{
     .then((emailuser)=>{
         if(!emailuser){
             User.findOne({username:username})
-            .then((usname)=>{
-                if(!usname){
+            .then((username)=>{
+                if(!username){
                     User.findOne({userid:userid})
                     .then((userExists)=>{
                         if(!userExists){
@@ -160,7 +160,7 @@ router.post('/register',(req,res)=>{
                                     password:hashedPsd,
                                     userid:userid,
                                     email:req.body.email.toLowerCase(),
-                                    username:username
+                                    username:username.toLowerCase()
                                 })
                                 newUser.save()
                                 .then((user)=>{
@@ -222,8 +222,7 @@ router.post('/login',(req,res)=>{
                             role:'admin'
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)
@@ -234,8 +233,7 @@ router.post('/login',(req,res)=>{
                             token:token
                         },{
                             new:true
-                        }).select('_id email role wishlist cart token')
-                        .then((updatedUser)=>{
+                        }).then((updatedUser)=>{
                             return res.status(200).json({user:updatedUser})
                         }).catch(error=>{
                             console.log(error)

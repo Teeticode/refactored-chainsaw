@@ -40,7 +40,7 @@ app.use(`${url}+payments`, paymentRouter);
 app.use(`${url}+products`, productsRouter);
 app.use(`${url}+category`, categoryRouter);
 app.use(`${url}+stores`, storeRouter);
-app.use(`${url}+premium`, premiumRouter);
+app.use(`${url}+premium`, storeRouter);
 app.use(`${url}+images`, express.static(path.join(__dirname, 'Images')))
 
 connectToDb();
