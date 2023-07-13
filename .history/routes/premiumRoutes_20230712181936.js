@@ -15,12 +15,11 @@ router.get('/', (req,res)=>{
     })
 })
 
-router.get('/verify',verifyUser, (req,res)=>{
-    console.log(req.user)
+router.get('/premium',verifyUser, (req,res)=>{
     Premium.findOne({owner:req.user})
     .then((premUser)=>{
         if(premUser){
-            User.findByIdAndUpdate(req.user,{
+            User.findByIdAndUpdate(premUser.owner,{
                 premium:true
             },{new:true})
             .then((updatedUser)=>{
@@ -30,10 +29,10 @@ router.get('/verify',verifyUser, (req,res)=>{
                     return res.status(404).json({error:'Not Found'})
                 }
             }).catch((err)=>{
-                return res.status(500).json({error:err})
+                return res.status(500).json({error:'Something Went Wrong'})
             })
         }else{
-            User.findByIdAndUpdate(req.user,{
+            User.findByIdAndUpdate(premUser.owner,{
                 premium:false
             },{new:true})
             .then((updatedUser)=>{

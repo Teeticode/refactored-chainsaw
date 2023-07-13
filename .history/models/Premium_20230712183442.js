@@ -18,15 +18,6 @@ const premiumSubscriberSchema = new mongoose.Schema({
         ref:'Tiers',
         require:true
     },
-    amount:{
-        type:Number,
-        required:true
-    },
-    isPaid:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
     owner:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",

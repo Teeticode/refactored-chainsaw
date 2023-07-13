@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Tiers = require('./Tiers')
 const User = require('./Users')
 
-const premiumSubscriberSchema = new mongoose.Schema({
+const premiumSchema = new mongoose.Schema({
     email:{
         type:String,
         require:true,
@@ -18,15 +18,6 @@ const premiumSubscriberSchema = new mongoose.Schema({
         ref:'Tiers',
         require:true
     },
-    amount:{
-        type:Number,
-        required:true
-    },
-    isPaid:{
-        type:Boolean,
-        require:true,
-        default:false
-    },
     owner:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
@@ -36,5 +27,5 @@ const premiumSubscriberSchema = new mongoose.Schema({
     timestamps:true
 });
 
-const Premium = mongoose.model('Premium',premiumSubscriberSchema)
+const Premium = mongoose.model('Premium',premiumSchema)
 module.exports = Premium

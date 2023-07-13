@@ -13,23 +13,9 @@ router.get('/', (req,res)=>{
         return res.status(500).json({error:'Something Went Wrong'})
     })
 })
-router.get('/:id', (req,res)=>{
-    const id = req.params.id;
-    Tiers.findOne({_id:id})
-    .then((tier)=>{
-        if(!tier){
-            return res.status(404).json({error:'Tier not found'})
-        }else{
-            return res.status(200).json({tier:tier})
-        }
-    })
-    .catch((err)=>{
-        return res.status(500).json({error:'Something Went Wrong'})
-    })
-})
 
 router.post('/',verifyUser, (req,res)=>{
-    if(req.admin !== 'admin'){
+    if(req.role === 'user'){
         return res.status(401).json({error:'Invalid Request'})
     }else{
         if(!req.body.name || !req.body.amount){
@@ -47,35 +33,10 @@ router.post('/',verifyUser, (req,res)=>{
                     return res.status(201).json({success:`${savedTier.name} created successfully`})
                 })
                 .catch((err)=>{
-                    return res.status(500).json({error:'Something Went Wrong'});
+                    return res.status(500).json({error:err});
                 })
             }else{
-                return res.status(500).json({error:'Tier Exists'})
-            }
-        })
-        .catch((err)=>{
-            return res.status(500).json({error:'Something Went Wrong'})
-        })
-    }
-    
-})
-router.put('/:id',verifyUser, (req,res)=>{
-    const id = req.params.id
-    if(req.admin !== 'admin'){
-        return res.status(401).json({error:'Invalid Request'})
-    }else{
-        if(!req.body.name || !req.body.amount){
-            return res.status(500).json({error:'Fill In All Fields'})
-        }
-        Tiers.findByIdAndUpdate(id,{
-            name:req.body.name,
-            amount:req.body.amount
-        },{new:true})
-        .then((updatedTier)=>{
-            if(updatedTier){
-                return res.status(200).json({success:true})
-            }else{
-                return res.status(404).json({success:false})
+                return res.status(500).json({error:'something went wrong'})
             }
         })
         .catch((err)=>{
@@ -86,11 +47,8 @@ router.put('/:id',verifyUser, (req,res)=>{
 })
 router.delete('/:id',verifyUser, (req,res)=>{
     const id = req.params.id;
-    console.log(req.admin)
     if(mongoose.isValidObjectId(id)){
-        if(req.admin !== 'admin'){
-            return res.status(401).json({error:'Invalid Request'})
-        }else{
+        if(req.role === 'admin'){
             Tiers.findByIdAndDelete(id)
             .then((deletedTier)=>{
                 if(deletedTier){
@@ -102,6 +60,8 @@ router.delete('/:id',verifyUser, (req,res)=>{
             .catch((err)=>{
                 return res.status(500).json({error:'Something Went Wrong'})
             })
+        }else{
+            return res.status(401).json({error:'Invalid Request'})
         }
     }else{
         return res.status(500).json({error:'Something Went Wrong'})

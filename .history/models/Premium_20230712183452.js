@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Tiers = require('./Tiers')
+const User = require('./Users')
 
 const premiumSchema = new mongoose.Schema({
     email:{
@@ -12,9 +13,14 @@ const premiumSchema = new mongoose.Schema({
     cardNumber:{
         type:String,
     },
-    Tier:{
+    tier:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Tiers',
+        require:true
+    },
+    owner:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
         require:true
     }
 },{

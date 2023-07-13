@@ -43,12 +43,12 @@ router.get('/verify',verifyUser, (req,res)=>{
                     return res.status(404).json({error:'Not Found'})
                 }
             }).catch((err)=>{
-                return res.status(500).json({error:'Something Went Wrong'})
+                return res.status(500).json({error:err})
             })
         }
     })
     .catch((err)=>{
-        return res.status(500).json({error:'Something Went Wrong'})
+        return res.status(500).json({error:err})
     })
 })
 

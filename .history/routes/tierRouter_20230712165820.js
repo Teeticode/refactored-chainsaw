@@ -29,6 +29,7 @@ router.get('/:id', (req,res)=>{
 })
 
 router.post('/',verifyUser, (req,res)=>{
+    console.log(req.admin);
     if(req.admin !== 'admin'){
         return res.status(401).json({error:'Invalid Request'})
     }else{
@@ -51,31 +52,6 @@ router.post('/',verifyUser, (req,res)=>{
                 })
             }else{
                 return res.status(500).json({error:'Tier Exists'})
-            }
-        })
-        .catch((err)=>{
-            return res.status(500).json({error:'Something Went Wrong'})
-        })
-    }
-    
-})
-router.put('/:id',verifyUser, (req,res)=>{
-    const id = req.params.id
-    if(req.admin !== 'admin'){
-        return res.status(401).json({error:'Invalid Request'})
-    }else{
-        if(!req.body.name || !req.body.amount){
-            return res.status(500).json({error:'Fill In All Fields'})
-        }
-        Tiers.findByIdAndUpdate(id,{
-            name:req.body.name,
-            amount:req.body.amount
-        },{new:true})
-        .then((updatedTier)=>{
-            if(updatedTier){
-                return res.status(200).json({success:true})
-            }else{
-                return res.status(404).json({success:false})
             }
         })
         .catch((err)=>{
