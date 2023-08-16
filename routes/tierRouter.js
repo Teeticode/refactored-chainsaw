@@ -29,9 +29,7 @@ router.get('/:id', (req,res)=>{
 })
 
 router.post('/',verifyUser, (req,res)=>{
-    if(req.admin !== 'admin'){
-        return res.status(401).json({error:'Invalid Request'})
-    }else{
+
         if(!req.body.name || !req.body.amount){
             return res.status(500).json({error:'Fill In All Fields'})
         }
@@ -56,7 +54,7 @@ router.post('/',verifyUser, (req,res)=>{
         .catch((err)=>{
             return res.status(500).json({error:'Something Went Wrong'})
         })
-    }
+    
     
 })
 router.put('/:id',verifyUser, (req,res)=>{
