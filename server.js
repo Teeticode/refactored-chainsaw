@@ -19,7 +19,7 @@ const {dirname} = require('path');
 const cors = require('cors')
 
 let corsOption = {
-    origin: ['http://localhost:3000','https://teeticolab.eu.org','https://jubilant-waffle-5pqj9wgwpp6hvwx9-3000.app.github.dev']
+    origin: ['http://localhost:3000', 'http://localhost:5173/','https://teeticolab.eu.org','https://jubilant-waffle-5pqj9wgwpp6hvwx9-3000.app.github.dev']
 }
 dotenv.config();
 const app = express();
